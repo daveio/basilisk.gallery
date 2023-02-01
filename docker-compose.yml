@@ -125,7 +125,7 @@ services:
       - mastodonStorage:/mastodon/public/system:rw
 version: '3'
 volumes:
-  elasticSearchStorage:
+  elasticsearchStorage:
     external: true
   mastodonStorage:
     external: true
