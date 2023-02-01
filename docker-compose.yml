@@ -42,7 +42,7 @@ services:
     image: tootsuite/mastodon
     pull_policy: build
     restart: always
-    env_file: .env.production
+    # env_file: .env.production
     command: bash -c "rm -f /mastodon/tmp/pids/server.pid; bundle exec rails s -p 3000"
     networks:
       - external_network
@@ -66,7 +66,7 @@ services:
     image: tootsuite/mastodon
     pull_policy: build
     restart: always
-    env_file: .env.production
+    # env_file: .env.production
     command: node ./streaming
     networks:
       - external_network
@@ -87,7 +87,7 @@ services:
     image: tootsuite/mastodon
     pull_policy: build
     restart: always
-    env_file: .env.production
+    # env_file: .env.production
     command: bundle exec sidekiq
     depends_on:
       - privoxy
