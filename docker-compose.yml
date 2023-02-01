@@ -1,7 +1,6 @@
 ---
 networks:
-  external_network:
-    external: true
+  external_network: {}
   internal_network:
     internal: true
 services:
