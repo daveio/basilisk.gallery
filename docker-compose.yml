@@ -112,8 +112,8 @@ services:
       REDIS_REAL_HOST: ${REDIS_REAL_HOST}
       REDIS_REAL_PORT: ${REDIS_REAL_PORT}
       REDIS_PORT: ${REDIS_PORT}
-    container_name: alpine/socat
-    image: socat
+    container_name: socat
+    image: alpine/socat
     restart: always
     healthcheck:
       test: ['CMD-SHELL', "ps aux | grep 'socat' || false"]
