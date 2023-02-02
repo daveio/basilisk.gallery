@@ -41,6 +41,7 @@ services:
       - elasticsearchStorage:/usr/share/elasticsearch/data:rw
   privoxy:
     container_name: privoxy
+    restart: always
     depends_on:
       - tor
     image: sirboops/privoxy
@@ -50,6 +51,45 @@ services:
     volumes:
       - privoxyStorage:/opt/config:rw
   sidekiq:
+    environment:
+      ALLOW_ACCESS_TO_HIDDEN_SERVICE: ${ALLOW_ACCESS_TO_HIDDEN_SERVICE}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      DB_HOST: ${DB_HOST}
+      DB_NAME: ${DB_NAME}
+      DB_PASS: ${DB_PASS}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      ES_ENABLED: ${ES_ENABLED}
+      ES_HOST: ${ES_HOST}
+      ES_PORT: ${ES_PORT}
+      LOCAL_DOMAIN: ${LOCAL_DOMAIN}
+      OTP_SECRET: ${OTP_SECRET}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_REAL_HOST: ${REDIS_REAL_HOST}
+      REDIS_REAL_PORT: ${REDIS_REAL_PORT}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      REDIS_PORT: ${REDIS_PORT}
+      S3_ALIAS_HOST: ${S3_ALIAS_HOST}
+      S3_BUCKET: ${S3_BUCKET}
+      S3_ENABLED: ${S3_ENABLED}
+      S3_ENDPOINT: ${S3_ENDPOINT}
+      S3_HOSTNAME: ${S3_HOSTNAME}
+      S3_PROTOCOL: ${S3_PROTOCOL}
+      S3_REGION: ${S3_REGION}
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      SINGLE_USER_MODE: ${SINGLE_USER_MODE}
+      SMTP_AUTH_METHOD: ${SMTP_AUTH_METHOD}
+      SMTP_ENABLE_STARTTLS: ${SMTP_ENABLE_STARTTLS}
+      SMTP_FROM_ADDRESS: ${SMTP_FROM_ADDRESS}
+      SMTP_LOGIN: ${SMTP_LOGIN}
+      SMTP_OPENSSL_VERIFY_MODE: ${SMTP_OPENSSL_VERIFY_MODE}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_SERVER: ${SMTP_SERVER}
+      VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY}
+      VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY}
+      http_proxy: ${http_proxy}
     build: .
     # env_file: .env.production
     command: bundle exec sidekiq
@@ -67,7 +107,61 @@ services:
     restart: always
     volumes:
       - mastodonStorage:/mastodon/public/system:rw
+  socat:
+    environment:
+      REDIS_REAL_HOST: ${REDIS_REAL_HOST}
+      REDIS_REAL_PORT: ${REDIS_REAL_PORT}
+      REDIS_PORT: ${REDIS_PORT}
+    container_name: socat
+    image: socat
+    restart: always
+    healthcheck:
+      test: ['CMD-SHELL', "ps aux | grep 'socat' || false"]
+    command: bash -c "socat tcp-listen:${REDIS_PORT},fork,reuseaddr openssl-connect:${REDIS_REAL_HOST}:${REDIS_REAL_PORT},verify=0"
+    networks:
+      - external_network
+      - internal_network
   streaming:
+    environment:
+      ALLOW_ACCESS_TO_HIDDEN_SERVICE: ${ALLOW_ACCESS_TO_HIDDEN_SERVICE}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      DB_HOST: ${DB_HOST}
+      DB_NAME: ${DB_NAME}
+      DB_PASS: ${DB_PASS}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      ES_ENABLED: ${ES_ENABLED}
+      ES_HOST: ${ES_HOST}
+      ES_PORT: ${ES_PORT}
+      LOCAL_DOMAIN: ${LOCAL_DOMAIN}
+      OTP_SECRET: ${OTP_SECRET}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_REAL_HOST: ${REDIS_REAL_HOST}
+      REDIS_REAL_PORT: ${REDIS_REAL_PORT}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      REDIS_PORT: ${REDIS_PORT}
+      S3_ALIAS_HOST: ${S3_ALIAS_HOST}
+      S3_BUCKET: ${S3_BUCKET}
+      S3_ENABLED: ${S3_ENABLED}
+      S3_ENDPOINT: ${S3_ENDPOINT}
+      S3_HOSTNAME: ${S3_HOSTNAME}
+      S3_PROTOCOL: ${S3_PROTOCOL}
+      S3_REGION: ${S3_REGION}
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      SINGLE_USER_MODE: ${SINGLE_USER_MODE}
+      SMTP_AUTH_METHOD: ${SMTP_AUTH_METHOD}
+      SMTP_ENABLE_STARTTLS: ${SMTP_ENABLE_STARTTLS}
+      SMTP_FROM_ADDRESS: ${SMTP_FROM_ADDRESS}
+      SMTP_LOGIN: ${SMTP_LOGIN}
+      SMTP_OPENSSL_VERIFY_MODE: ${SMTP_OPENSSL_VERIFY_MODE}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_SERVER: ${SMTP_SERVER}
+      VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY}
+      VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY}
+      http_proxy: ${http_proxy}
+
     build: .
     # env_file: .env.production
     command: node ./streaming
@@ -92,11 +186,51 @@ services:
     restart: always
   tor:
     container_name: tor
+    restart: always
     image: sirboops/tor
     networks:
       - external_network
       - internal_network
   web:
+    environment:
+      ALLOW_ACCESS_TO_HIDDEN_SERVICE: ${ALLOW_ACCESS_TO_HIDDEN_SERVICE}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      DB_HOST: ${DB_HOST}
+      DB_NAME: ${DB_NAME}
+      DB_PASS: ${DB_PASS}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      ES_ENABLED: ${ES_ENABLED}
+      ES_HOST: ${ES_HOST}
+      ES_PORT: ${ES_PORT}
+      LOCAL_DOMAIN: ${LOCAL_DOMAIN}
+      OTP_SECRET: ${OTP_SECRET}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_REAL_HOST: ${REDIS_REAL_HOST}
+      REDIS_REAL_PORT: ${REDIS_REAL_PORT}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      REDIS_PORT: ${REDIS_PORT}
+      S3_ALIAS_HOST: ${S3_ALIAS_HOST}
+      S3_BUCKET: ${S3_BUCKET}
+      S3_ENABLED: ${S3_ENABLED}
+      S3_ENDPOINT: ${S3_ENDPOINT}
+      S3_HOSTNAME: ${S3_HOSTNAME}
+      S3_PROTOCOL: ${S3_PROTOCOL}
+      S3_REGION: ${S3_REGION}
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      SINGLE_USER_MODE: ${SINGLE_USER_MODE}
+      SMTP_AUTH_METHOD: ${SMTP_AUTH_METHOD}
+      SMTP_ENABLE_STARTTLS: ${SMTP_ENABLE_STARTTLS}
+      SMTP_FROM_ADDRESS: ${SMTP_FROM_ADDRESS}
+      SMTP_LOGIN: ${SMTP_LOGIN}
+      SMTP_OPENSSL_VERIFY_MODE: ${SMTP_OPENSSL_VERIFY_MODE}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_SERVER: ${SMTP_SERVER}
+      VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY}
+      VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY}
+      http_proxy: ${http_proxy}
     build: .
     # env_file: .env.production
     command: bash -c "rm -f /mastodon/tmp/pids/server.pid; bundle exec rails s -p 3000"
