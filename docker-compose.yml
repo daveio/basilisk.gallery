@@ -99,7 +99,7 @@ services:
       - privoxy
     healthcheck:
       test: ['CMD-SHELL', "ps aux | grep 'idekiq 6' || false"]
-    image: tootsuite/mastodon
+    image: basilisk-glitch
     networks:
       - external_network
       - internal_network
@@ -176,7 +176,7 @@ services:
           'CMD-SHELL',
           'wget -q --spider --proxy=off localhost:4000/api/v1/streaming/health || exit 1',
         ]
-    image: tootsuite/mastodon
+    image: basilisk-glitch
     networks:
       - external_network
       - internal_network
@@ -246,7 +246,7 @@ services:
           'CMD-SHELL',
           'wget -q --spider --proxy=off localhost:3000/health || exit 1',
         ]
-    image: tootsuite/mastodon
+    image: basilisk-glitch
     networks:
       - external_network
       - internal_network
