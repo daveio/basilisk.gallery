@@ -112,7 +112,7 @@ services:
       REDIS_REAL_HOST: ${REDIS_REAL_HOST}
       REDIS_REAL_PORT: ${REDIS_REAL_PORT}
       REDIS_PORT: ${REDIS_PORT}
-    container_name: socat
+    container_name: alpine/socat
     image: socat
     restart: always
     healthcheck:
