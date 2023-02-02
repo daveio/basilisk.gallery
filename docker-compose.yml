@@ -117,7 +117,7 @@ services:
     restart: always
     healthcheck:
       test: ['CMD-SHELL', "ps aux | grep 'socat' || false"]
-    command: bash -c "socat tcp-listen:${REDIS_PORT},fork,reuseaddr openssl-connect:${REDIS_REAL_HOST}:${REDIS_REAL_PORT},verify=0"
+    command: tcp-listen:${REDIS_PORT},fork,reuseaddr openssl-connect:${REDIS_REAL_HOST}:${REDIS_REAL_PORT},verify=0
     networks:
       - external_network
       - internal_network
