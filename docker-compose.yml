@@ -261,8 +261,8 @@ services:
       - mastodonStorage:/mastodon/public/system:rw
 version: '3'
 volumes:
-  # elasticsearchStorage:
-  #   external: true
+  elasticsearchStorage:
+    external: true
   mastodonStorage:
     external: true
   privoxyStorage:
