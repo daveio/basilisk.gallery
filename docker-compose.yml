@@ -6,8 +6,6 @@ networks:
 services:
   es:
     container_name: elasticsearch
-    sysctls:
-      - vm.max_map_count=524288
     environment:
       - ES_JAVA_OPTS=-Xms512m -Xmx512m -Des.enforce.bootstrap.checks=true
       - xpack.license.self_generated.type=basic
