@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-RSpec.describe Api::V1::ListsController, type: :controller do
+RSpec.describe Api::V1::ListsController do
   render_views
 
   let!(:user)  { Fabricate(:user) }

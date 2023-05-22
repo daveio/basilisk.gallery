@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-RSpec.describe Api::V1::Admin::DomainBlocksController, type: :controller do
+RSpec.describe Api::V1::Admin::DomainBlocksController do
   render_views
 
   let(:role)   { UserRole.find_by(name: 'Admin') }
@@ -73,17 +75,16 @@ RSpec.describe Api::V1::Admin::DomainBlocksController, type: :controller do
 
   describe 'PUT #update' do
     let!(:remote_account) { Fabricate(:account, domain: 'example.com') }
-    let(:domain_block)    { Fabricate(:domain_block, domain: 'example.com', severity: original_severity) }
+    let(:subject) do
+      post :update, params: { id: domain_block.id, domain: 'example.com', severity: new_severity }
+    end
+    let(:domain_block) { Fabricate(:domain_block, domain: 'example.com', severity: original_severity) }
 
     before do
       BlockDomainService.new.call(domain_block)
     end
 
-    let(:subject) do
-      post :update, params: { id: domain_block.id, domain: 'example.com', severity: new_severity }
-    end
-
-    context 'downgrading a domain suspension to silence' do
+    context 'when downgrading a domain suspension to silence' do
       let(:original_severity) { 'suspend' }
       let(:new_severity)      { 'silence' }
 
@@ -100,7 +101,7 @@ RSpec.describe Api::V1::Admin::DomainBlocksController, type: :controller do
       end
     end
 
-    context 'upgrading a domain silence to suspend' do
+    context 'when upgrading a domain silence to suspend' do
       let(:original_severity) { 'silence' }
       let(:new_severity)      { 'suspend' }
 

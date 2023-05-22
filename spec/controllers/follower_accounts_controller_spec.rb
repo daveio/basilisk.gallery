@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe FollowerAccountsController do
@@ -37,8 +39,9 @@ describe FollowerAccountsController do
     end
 
     context 'when format is json' do
-      subject(:response) { get :index, params: { account_username: alice.username, page: page, format: :json } }
-      subject(:body) { JSON.parse(response.body) }
+      subject(:body) { response.parsed_body }
+
+      let(:response) { get :index, params: { account_username: alice.username, page: page, format: :json } }
 
       context 'with page' do
         let(:page) { 1 }

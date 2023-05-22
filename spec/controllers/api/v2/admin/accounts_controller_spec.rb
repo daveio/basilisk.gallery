@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-RSpec.describe Api::V2::Admin::AccountsController, type: :controller do
+RSpec.describe Api::V2::Admin::AccountsController do
   render_views
 
   let(:role)   { UserRole.find_by(name: 'Moderator') }
@@ -65,7 +67,7 @@ RSpec.describe Api::V2::Admin::AccountsController, type: :controller do
         it "returns the correct accounts (#{expected_results.inspect})" do
           json = body_as_json
 
-          expect(json.map { |a| a[:id].to_i }).to eq (expected_results.map { |symbol| send(symbol).id })
+          expect(json.map { |a| a[:id].to_i }).to eq(expected_results.map { |symbol| send(symbol).id })
         end
       end
     end

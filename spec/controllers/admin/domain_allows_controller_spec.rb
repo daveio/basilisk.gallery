@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-RSpec.describe Admin::DomainAllowsController, type: :controller do
+RSpec.describe Admin::DomainAllowsController do
   render_views
 
   before do

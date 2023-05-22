@@ -20,9 +20,11 @@
   }
 
   &__note {
-    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
     color: $ui-secondary-color;
   }
 
@@ -30,7 +32,9 @@
     border: 0;
     padding: 0;
 
-    & > .account__avatar-wrapper { margin: 0 8px 0 0 }
+    & > .account__avatar-wrapper {
+      margin-inline-end: 8px;
+    }
 
     & > .display-name {
       height: 24px;
@@ -55,16 +59,16 @@
 
 .account__avatar-wrapper {
   float: left;
-  margin-left: 12px;
-  margin-right: 12px;
+  margin-inline-start: 12px;
+  margin-inline-end: 12px;
 }
 
 .account__avatar {
-  @include avatar-radius();
+  @include avatar-radius;
+
   display: block;
   position: relative;
   cursor: pointer;
-
   width: 36px;
   height: 36px;
   background-size: 36px 36px;
@@ -72,16 +76,18 @@
   &-inline {
     display: inline-block;
     vertical-align: middle;
-    margin-right: 5px;
+    margin-inline-end: 5px;
   }
 
   &-composite {
     @include avatar-radius;
+
     overflow: hidden;
     position: relative;
 
     & div {
       @include avatar-radius;
+
       float: left;
       position: relative;
       box-sizing: border-box;
@@ -91,7 +97,7 @@
       display: block;
       position: absolute;
       top: 50%;
-      left: 50%;
+      inset-inline-start: 50%;
       transform: translate(-50%, -50%);
       color: $primary-text-color;
       text-shadow: 1px 1px 2px $base-shadow-color;
@@ -102,33 +108,34 @@
 }
 
 .account__avatar-overlay {
-  position: relative;
   @include avatar-size(48px);
 
   position: relative;
 
   &-base {
-    @include avatar-radius();
+    @include avatar-radius;
     @include avatar-size(36px);
 
     img {
       @include avatar-radius;
+
       width: 100%;
       height: 100%;
     }
   }
 
   &-overlay {
-    @include avatar-radius();
+    @include avatar-radius;
     @include avatar-size(24px);
 
     position: absolute;
     bottom: 0;
-    right: 0;
+    inset-inline-end: 0;
     z-index: 1;
 
     img {
       @include avatar-radius;
+
       width: 100%;
       height: 100%;
     }
@@ -193,12 +200,12 @@
   text-decoration: none;
   overflow: hidden;
   flex: 0 1 100%;
-  border-left: 1px solid lighten($ui-base-color, 8%);
+  border-inline-start: 1px solid lighten($ui-base-color, 8%);
   padding: 10px 0;
   border-bottom: 4px solid transparent;
 
   &:first-child {
-    border-left: 0;
+    border-inline-start: 0;
   }
 
   &.active {
@@ -242,12 +249,12 @@
 
 .account-authorize__avatar {
   float: left;
-  margin-right: 10px;
+  margin-inline-end: 10px;
 }
 
 .notification__report {
   padding: 8px 10px;
-  padding-left: 68px;
+  padding-inline-start: 68px;
   position: relative;
   border-bottom: 1px solid lighten($ui-base-color, 8%);
   min-height: 54px;
@@ -267,14 +274,15 @@
 
   &__avatar {
     position: absolute;
-    left: 10px;
+    inset-inline-start: 10px;
     top: 10px;
   }
 }
 
 .notification__message {
-  margin-left: 42px;
-  padding: 8px 0 0 26px;
+  margin-inline-start: 42px;
+  padding-top: 8px;
+  padding-inline-start: 26px;
   cursor: default;
   color: $darker-text-color;
   font-size: 15px;
@@ -341,7 +349,7 @@
   &__icons {
     position: absolute;
     top: 50%;
-    left: 50%;
+    inset-inline-start: 50%;
     transform: translate(-50%, -50%);
     font-size: 24px;
   }
@@ -379,7 +387,7 @@
       &::before,
       &::after {
         display: block;
-        content: "";
+        content: '';
         position: absolute;
         bottom: 0;
         left: 50%;
@@ -426,7 +434,7 @@
 
   &__message {
     position: relative;
-    margin-left: 58px;
+    margin-inline-start: 58px;
     color: $dark-text-color;
     padding: 8px 0;
     padding-top: 0;
@@ -441,7 +449,7 @@
   }
 
   &__icon-wrapper {
-    left: -26px;
+    inset-inline-start: -26px;
     position: absolute;
   }
 
@@ -495,7 +503,7 @@
   &__info {
     position: absolute;
     top: 10px;
-    left: 10px;
+    inset-inline-start: 10px;
   }
 
   &__image {
@@ -539,7 +547,7 @@
     margin-top: -81px;
     height: 130px;
     overflow: hidden;
-    margin-left: -2px; // aligns the pfp with content below
+    margin-inline-start: -2px; // aligns the pfp with content below
 
     .account-role {
       margin: 0 2px;
@@ -630,8 +638,8 @@
       color: $darker-text-color;
 
       .columns-area--mobile & {
-        padding-left: 20px;
-        padding-right: 20px;
+        padding-inline-start: 20px;
+        padding-inline-end: 20px;
       }
     }
 
@@ -710,22 +718,22 @@
         padding: 2px 6px;
         color: $darker-text-color;
 
-  &:hover,
-  &:active,
-  &:focus {
-    color: lighten($darker-text-color, 7%);
-    background-color: rgba($darker-text-color, 0.15);
-  }
+        &:hover,
+        &:active,
+        &:focus {
+          color: lighten($darker-text-color, 7%);
+          background-color: rgba($darker-text-color, 0.15);
+        }
 
-  &:focus {
-    background-color: rgba($darker-text-color, 0.3);
-  }
+        &:focus {
+          background-color: rgba($darker-text-color, 0.3);
+        }
 
-  &[disabled] {
-    color: darken($darker-text-color, 13%);
-    background-color: transparent;
-    cursor: default;
-  }
+        &[disabled] {
+          color: darken($darker-text-color, 13%);
+          background-color: transparent;
+          cursor: default;
+        }
       }
 
       .flex-spacer {
@@ -744,8 +752,6 @@
       display: block;
       box-sizing: border-box;
       width: calc(100% + 20px);
-      margin: 0;
-      margin-top: 5px;
       color: $secondary-text-color;
       background: $ui-base-color;
       padding: 10px;
@@ -766,12 +772,14 @@
 }
 
 .moved-account-banner,
-.follow-request-banner {
+.follow-request-banner,
+.account-memorial-banner {
   padding: 20px;
   background: lighten($ui-base-color, 4%);
   display: flex;
   align-items: center;
   flex-direction: column;
+
   &__message {
     color: $darker-text-color;
     padding: 8px 0;
@@ -782,6 +790,7 @@
     text-align: center;
     margin-bottom: 16px;
   }
+
   &__action {
     display: flex;
     justify-content: space-between;
@@ -797,4 +806,8 @@
 
 .follow-request-banner .button {
   width: 100%;
+}
+
+.account-memorial-banner__message {
+  margin-bottom: 0;
 }

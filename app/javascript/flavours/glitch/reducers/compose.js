@@ -54,7 +54,7 @@ import { TIMELINE_DELETE } from 'flavours/glitch/actions/timelines';
 import { STORE_HYDRATE } from 'flavours/glitch/actions/store';
 import { REDRAFT } from 'flavours/glitch/actions/statuses';
 import { Map as ImmutableMap, List as ImmutableList, OrderedSet as ImmutableOrderedSet, fromJS } from 'immutable';
-import uuid from '../uuid';
+import { uuid } from '../uuid';
 import { privacyPreference } from 'flavours/glitch/utils/privacy_preference';
 import { me, defaultContentType } from 'flavours/glitch/initial_state';
 import { overwrite } from 'flavours/glitch/utils/js_helpers';
@@ -273,20 +273,23 @@ const ignoreSuggestion = (state, position, token, completion, path) => {
 };
 
 const sortHashtagsByUse = (state, tags) => {
-  const personalHistory = state.get('tagHistory');
+  const personalHistory = state.get('tagHistory').map(tag => tag.toLowerCase());
 
-  return tags.sort((a, b) => {
-    const usedA = personalHistory.includes(a.name);
-    const usedB = personalHistory.includes(b.name);
+  const tagsWithLowercase = tags.map(t => ({ ...t, lowerName: t.name.toLowerCase() }));
+  const sorted = tagsWithLowercase.sort((a, b) => {
+    const usedA = personalHistory.includes(a.lowerName);
+    const usedB = personalHistory.includes(b.lowerName);
 
     if (usedA === usedB) {
       return 0;
     } else if (usedA && !usedB) {
-      return 1;
-    } else {
       return -1;
+    } else {
+      return 1;
     }
   });
+  sorted.forEach(tag => delete tag.lowerName);
+  return sorted;
 };
 
 const insertEmoji = (state, position, emojiData) => {
@@ -421,6 +424,8 @@ export default function compose(state = initialState, action) {
       map.set('preselectDate', new Date());
       map.set('idempotencyKey', uuid());
 
+      map.update('media_attachments', list => list.filter(media => media.get('unattached')));
+
       if (action.status.get('language') && !action.status.has('translation')) {
         map.set('language', action.status.get('language'));
       } else {
@@ -441,6 +446,7 @@ export default function compose(state = initialState, action) {
     });
   case COMPOSE_REPLY_CANCEL:
     state = state.setIn(['advanced_options', 'threaded_mode'], false);
+    // eslint-disable-next-line no-fallthrough -- fall-through to `COMPOSE_RESET` is intended
   case COMPOSE_RESET:
     return state.withMutations(map => {
       map.set('in_reply_to', null);
@@ -451,6 +457,7 @@ export default function compose(state = initialState, action) {
       map.set('privacy', state.get('default_privacy'));
       map.set('id', null);
       map.set('poll', null);
+      map.set('language', state.get('default_language'));
       map.update(
         'advanced_options',
         map => map.mergeWith(overwrite, state.get('default_advanced_options')),
