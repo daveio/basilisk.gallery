@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import Status from 'flavours/glitch/components/status';
-import { List as ImmutableList } from 'immutable';
 import { makeGetStatus, makeGetPictureInPicture } from 'flavours/glitch/selectors';
 import {
   replyCompose,
@@ -37,13 +36,9 @@ import { initBoostModal } from 'flavours/glitch/actions/boosts';
 import { openModal } from 'flavours/glitch/actions/modal';
 import { deployPictureInPicture } from 'flavours/glitch/actions/picture_in_picture';
 import { changeLocalSetting } from 'flavours/glitch/actions/local_settings';
-import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 import { boostModal, favouriteModal, deleteModal } from 'flavours/glitch/initial_state';
-import { filterEditLink } from 'flavours/glitch/utils/backend_links';
 import { showAlertForError } from '../actions/alerts';
-import AccountContainer from 'flavours/glitch/containers/account_container';
-import Spoilers from '../components/spoilers';
-import Icon from 'flavours/glitch/components/icon';
 
 const messages = defineMessages({
   deleteConfirm: { id: 'confirmations.delete.confirm', defaultMessage: 'Delete' },
@@ -52,6 +47,8 @@ const messages = defineMessages({
   redraftMessage: { id: 'confirmations.redraft.message', defaultMessage: 'Are you sure you want to delete this status and re-draft it? You will lose all replies, boosts and favourites to it.' },
   replyConfirm: { id: 'confirmations.reply.confirm', defaultMessage: 'Reply' },
   replyMessage: { id: 'confirmations.reply.message', defaultMessage: 'Replying now will overwrite the message you are currently composing. Are you sure you want to proceed?' },
+  editConfirm: { id: 'confirmations.edit.confirm', defaultMessage: 'Edit' },
+  editMessage: { id: 'confirmations.edit.message', defaultMessage: 'Editing now will overwrite the message you are currently composing. Are you sure you want to proceed?' },
   unfilterConfirm: { id: 'confirmations.unfilter.confirm', defaultMessage: 'Show' },
   author: { id: 'confirmations.unfilter.author', defaultMessage: 'Author' },
   matchingFilters: { id: 'confirmations.unfilter.filters', defaultMessage: 'Matching {count, plural, one {filter} other {filters}}' },
@@ -81,6 +78,7 @@ const makeMapStateToProps = () => {
     return {
       containerId: props.containerId || props.id,  //  Should match reblogStatus's id for reblogs
       status: status,
+      nextInReplyToId: props.nextId ? state.getIn(['statuses', props.nextId, 'in_reply_to_id']) : null,
       account: account || props.account,
       settings: state.get('local_settings'),
       prepend: prepend || props.prepend,
@@ -183,7 +181,18 @@ const mapDispatchToProps = (dispatch, { intl, contextType }) => ({
   },
 
   onEdit (status, history) {
-    dispatch(editStatus(status.get('id'), history));
+    dispatch((_, getState) => {
+      let state = getState();
+      if (state.getIn(['compose', 'text']).trim().length !== 0) {
+        dispatch(openModal('CONFIRM', {
+          message: intl.formatMessage(messages.editMessage),
+          confirm: intl.formatMessage(messages.editConfirm),
+          onConfirm: () => dispatch(editStatus(status.get('id'), history)),
+        }));
+      } else {
+        dispatch(editStatus(status.get('id'), history));
+      }
+    });
   },
 
   onTranslate (status) {

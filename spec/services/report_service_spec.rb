@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe ReportService, type: :service do
@@ -5,7 +7,7 @@ RSpec.describe ReportService, type: :service do
 
   let(:source_account) { Fabricate(:account) }
 
-  context 'for a remote account' do
+  context 'with a remote account' do
     let(:remote_account) { Fabricate(:account, domain: 'example.com', protocol: :activitypub, inbox_url: 'http://example.com/inbox') }
 
     before do
@@ -29,12 +31,12 @@ RSpec.describe ReportService, type: :service do
   end
 
   context 'when the reported status is a DM' do
-    let(:target_account) { Fabricate(:account) }
-    let(:status) { Fabricate(:status, account: target_account, visibility: :direct) }
-
     subject do
       -> { described_class.new.call(source_account, target_account, status_ids: [status.id]) }
     end
+
+    let(:target_account) { Fabricate(:account) }
+    let(:status) { Fabricate(:status, account: target_account, visibility: :direct) }
 
     context 'when it is addressed to the reporter' do
       before do
@@ -85,16 +87,17 @@ RSpec.describe ReportService, type: :service do
   end
 
   context 'when other reports already exist for the same target' do
-    let!(:target_account) { Fabricate(:account) }
-    let!(:other_report)   { Fabricate(:report, target_account: target_account) }
-
     subject do
       -> {  described_class.new.call(source_account, target_account) }
     end
 
+    let!(:target_account) { Fabricate(:account) }
+    let!(:other_report)   { Fabricate(:report, target_account: target_account) }
+
     before do
       ActionMailer::Base.deliveries.clear
-      source_account.user.settings.notification_emails['report'] = true
+      source_account.user.settings['notification_emails.report'] = true
+      source_account.user.save
     end
 
     it 'does not send an e-mail' do

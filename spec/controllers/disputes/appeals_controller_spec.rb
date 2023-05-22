@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-RSpec.describe Disputes::AppealsController, type: :controller do
+RSpec.describe Disputes::AppealsController do
   render_views
 
   before { sign_in current_user, scope: :user }

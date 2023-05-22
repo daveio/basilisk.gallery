@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Api::V1::Accounts::RelationshipsController do
@@ -19,7 +21,7 @@ describe Api::V1::Accounts::RelationshipsController do
       lewis.follow!(user.account)
     end
 
-    context 'provided only one ID' do
+    context 'when provided only one ID' do
       before do
         get :index, params: { id: simon.id }
       end
@@ -37,7 +39,7 @@ describe Api::V1::Accounts::RelationshipsController do
       end
     end
 
-    context 'provided multiple IDs' do
+    context 'when provided multiple IDs' do
       before do
         get :index, params: { id: [simon.id, lewis.id] }
       end

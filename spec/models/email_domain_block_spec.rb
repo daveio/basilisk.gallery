@@ -1,17 +1,12 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-RSpec.describe EmailDomainBlock, type: :model do
-  describe 'validations' do
-    it 'has a valid fabricator' do
-      email_domain_block = Fabricate.build(:email_domain_block)
-      expect(email_domain_block).to be_valid
-    end
-  end
-
+RSpec.describe EmailDomainBlock do
   describe 'block?' do
     let(:input) { nil }
 
-    context 'given an e-mail address' do
+    context 'when given an e-mail address' do
       let(:input) { "foo@#{domain}" }
 
       context do
@@ -38,7 +33,7 @@ RSpec.describe EmailDomainBlock, type: :model do
       end
     end
 
-    context 'given an array of domains' do
+    context 'when given an array of domains' do
       let(:input) { %w(foo.com mail.foo.com) }
 
       it 'returns true if the domain is blocked' do

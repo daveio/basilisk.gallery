@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
-RSpec.describe Api::V1::Admin::DomainAllowsController, type: :controller do
+RSpec.describe Api::V1::Admin::DomainAllowsController do
   render_views
 
   let(:role)   { UserRole.find_by(name: 'Admin') }
