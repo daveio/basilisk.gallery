@@ -92,6 +92,12 @@ services:
       VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY}
       http_proxy: ${http_proxy}
       MAX_TOOT_CHARS: ${MAX_TOOT_CHARS}
+      MAX_PINNED_TOOTS: ${MAX_BIO_CHARS}
+      MAX_BIO_CHARS: ${MAX_BIO_CHARS}
+      MAX_PROFILE_FIELDS: ${MAX_PROFILE_FIELDS}
+      MAX_DISPLAY_NAME_CHARS: ${MAX_DISPLAY_NAME_CHARS}
+      MAX_POLL_OPTIONS: ${MAX_POLL_OPTIONS}
+      MAX_POLL_OPTION_CHARS: ${MAX_POLL_OPTION_CHARS}
     build: .
     # env_file: .env.production
     command: bundle exec sidekiq
@@ -164,6 +170,12 @@ services:
       VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY}
       http_proxy: ${http_proxy}
       MAX_TOOT_CHARS: ${MAX_TOOT_CHARS}
+      MAX_PINNED_TOOTS: ${MAX_BIO_CHARS}
+      MAX_BIO_CHARS: ${MAX_BIO_CHARS}
+      MAX_PROFILE_FIELDS: ${MAX_PROFILE_FIELDS}
+      MAX_DISPLAY_NAME_CHARS: ${MAX_DISPLAY_NAME_CHARS}
+      MAX_POLL_OPTIONS: ${MAX_POLL_OPTIONS}
+      MAX_POLL_OPTION_CHARS: ${MAX_POLL_OPTION_CHARS}
     build: .
     # env_file: .env.production
     command: node ./streaming
@@ -234,6 +246,12 @@ services:
       VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY}
       http_proxy: ${http_proxy}
       MAX_TOOT_CHARS: ${MAX_TOOT_CHARS}
+      MAX_PINNED_TOOTS: ${MAX_BIO_CHARS}
+      MAX_BIO_CHARS: ${MAX_BIO_CHARS}
+      MAX_PROFILE_FIELDS: ${MAX_PROFILE_FIELDS}
+      MAX_DISPLAY_NAME_CHARS: ${MAX_DISPLAY_NAME_CHARS}
+      MAX_POLL_OPTIONS: ${MAX_POLL_OPTIONS}
+      MAX_POLL_OPTION_CHARS: ${MAX_POLL_OPTION_CHARS}
     build: .
     # env_file: .env.production
     command: bash -c "rm -f /mastodon/tmp/pids/server.pid; bundle exec rails s -p 3000"
