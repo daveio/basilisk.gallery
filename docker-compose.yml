@@ -91,6 +91,7 @@ services:
       VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY}
       VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY}
       http_proxy: ${http_proxy}
+      MAX_TOOT_CHARS: ${MAX_TOOT_CHARS}
     build: .
     # env_file: .env.production
     command: bundle exec sidekiq
@@ -162,7 +163,7 @@ services:
       VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY}
       VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY}
       http_proxy: ${http_proxy}
-
+      MAX_TOOT_CHARS: ${MAX_TOOT_CHARS}
     build: .
     # env_file: .env.production
     command: node ./streaming
@@ -232,6 +233,7 @@ services:
       VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY}
       VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY}
       http_proxy: ${http_proxy}
+      MAX_TOOT_CHARS: ${MAX_TOOT_CHARS}
     build: .
     # env_file: .env.production
     command: bash -c "rm -f /mastodon/tmp/pids/server.pid; bundle exec rails s -p 3000"
