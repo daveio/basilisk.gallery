@@ -55,10 +55,7 @@ module.exports = {
       '\\.(css|scss|json)$',
     ],
     'import/resolver': {
-      node: {
-        paths: ['app/javascript'],
-        extensions: ['.js', '.jsx', '.ts', '.tsx'],
-      },
+      typescript: {},
     },
   },
 
@@ -84,6 +81,15 @@ module.exports = {
       { property: 'substring', message: 'Use .slice instead of .substring.' },
       { property: 'substr', message: 'Use .slice instead of .substr.' },
     ],
+    'no-restricted-syntax': [
+      'error',
+      {
+        // eslint-disable-next-line no-restricted-syntax
+        selector: 'Literal[value=/•/], JSXText[value=/•/]',
+        // eslint-disable-next-line no-restricted-syntax
+        message: "Use '·' (middle dot) instead of '•' (bullet)",
+      },
+    ],
     'no-self-assign': 'off',
     'no-unused-expressions': 'error',
     'no-unused-vars': 'off',
@@ -101,11 +107,17 @@ module.exports = {
     'react/jsx-filename-extension': ['error', { extensions: ['.jsx', 'tsx'] }],
     'react/jsx-boolean-value': 'error',
     'react/display-name': 'off',
+    'react/jsx-fragments': ['error', 'syntax'],
     'react/jsx-equals-spacing': 'error',
     'react/jsx-no-bind': 'error',
+    'react/jsx-no-useless-fragment': 'error',
     'react/jsx-no-target-blank': 'off',
+    'react/jsx-tag-spacing': 'error',
+    'react/jsx-uses-react': 'off', // not needed with new JSX transform
+    'react/jsx-wrap-multilines': 'error',
     'react/no-deprecated': 'off',
     'react/no-unknown-property': 'off',
+    'react/react-in-jsx-scope': 'off', // not needed with new JSX transform
     'react/self-closing-comp': 'error',
 
     // recommended values found in https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/blob/main/src/index.js
@@ -168,11 +180,14 @@ module.exports = {
       {
         js: 'never',
         jsx: 'never',
+        mjs: 'never',
         ts: 'never',
         tsx: 'never',
       },
     ],
+    'import/first': 'error',
     'import/newline-after-import': 'error',
+    'import/no-anonymous-default-export': 'error',
     'import/no-extraneous-dependencies': [
       'error',
       {
@@ -187,7 +202,59 @@ module.exports = {
     'import/no-amd': 'error',
     'import/no-commonjs': 'error',
     'import/no-import-module-exports': 'error',
+    'import/no-relative-packages': 'error',
+    'import/no-self-import': 'error',
+    'import/no-useless-path-segments': 'error',
     'import/no-webpack-loader-syntax': 'error',
+
+    'import/order': [
+      'error',
+      {
+        alphabetize: { order: 'asc' },
+        'newlines-between': 'always',
+        groups: [
+          'builtin',
+          'external',
+          'internal',
+          'parent',
+          ['index', 'sibling'],
+          'object',
+        ],
+        pathGroups: [
+          // React core packages
+          {
+            pattern: '{react,react-dom,react-dom/client,prop-types}',
+            group: 'builtin',
+            position: 'after',
+          },
+          // I18n
+          {
+            pattern: '{react-intl,intl-messageformat}',
+            group: 'builtin',
+            position: 'after',
+          },
+          // Common React utilities
+          {
+            pattern: '{classnames,react-helmet,react-router-dom}',
+            group: 'external',
+            position: 'before',
+          },
+          // Immutable / Redux / data store
+          {
+            pattern: '{immutable,react-redux,react-immutable-proptypes,react-immutable-pure-component,reselect}',
+            group: 'external',
+            position: 'before',
+          },
+          // Internal packages
+          {
+            pattern: '{mastodon/**,flavours/glitch-soc/**}',
+            group: 'internal',
+            position: 'after',
+          },
+        ],
+        pathGroupsExcludedImportTypes: [],
+      },
+    ],
 
     'promise/always-return': 'off',
     'promise/catch-or-return': [
@@ -235,6 +302,7 @@ module.exports = {
         '.*rc.js',
         'ide-helper.js',
         'config/webpack/**/*',
+        'config/formatjs-formatter.js',
       ],
 
       env: {
@@ -258,18 +326,28 @@ module.exports = {
       extends: [
         'eslint:recommended',
         'plugin:@typescript-eslint/recommended',
+        'plugin:@typescript-eslint/recommended-requiring-type-checking',
         'plugin:react/recommended',
         'plugin:react-hooks/recommended',
         'plugin:jsx-a11y/recommended',
         'plugin:import/recommended',
         'plugin:import/typescript',
         'plugin:promise/recommended',
-        'plugin:jsdoc/recommended',
+        'plugin:jsdoc/recommended-typescript',
         'plugin:prettier/recommended',
       ],
 
+      parserOptions: {
+        project: './tsconfig.json',
+        tsconfigRootDir: __dirname,
+      },
+
       rules: {
-        '@typescript-eslint/no-explicit-any': 'off',
+        'import/consistent-type-specifier-style': ['error', 'prefer-top-level'],
+
+        '@typescript-eslint/consistent-type-definitions': ['warn', 'interface'],
+        '@typescript-eslint/consistent-type-exports': 'error',
+        '@typescript-eslint/consistent-type-imports': 'error',
 
         'jsdoc/require-jsdoc': 'off',
 
@@ -278,6 +356,9 @@ module.exports = {
         'import/no-default-export': 'warn',
         'react/prefer-stateless-function': 'warn',
         'react/function-component-definition': ['error', { namedComponents: 'arrow-function' }],
+        'react/jsx-uses-react': 'off', // not needed with new JSX transform
+        'react/react-in-jsx-scope': 'off', // not needed with new JSX transform
+        'react/prop-types': 'off',
       },
     },
     {

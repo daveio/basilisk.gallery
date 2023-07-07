@@ -1,5 +1,3 @@
-import 'intl';
-import 'intl/locale-data/jsonp/en';
 import 'core-js/features/object/assign';
 import 'core-js/features/object/values';
 import 'core-js/features/symbol';
@@ -10,8 +8,13 @@ if (!HTMLCanvasElement.prototype.toBlob) {
   const BASE64_MARKER = ';base64,';
 
   Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
-    value(callback: BlobCallback, type = 'image/png', quality: any) {
-      const dataURL = this.toDataURL(type, quality);
+    value: function (
+      this: HTMLCanvasElement,
+      callback: BlobCallback,
+      type = 'image/png',
+      quality: unknown
+    ) {
+      const dataURL: string = this.toDataURL(type, quality);
       let data;
 
       if (dataURL.indexOf(BASE64_MARKER) >= 0) {

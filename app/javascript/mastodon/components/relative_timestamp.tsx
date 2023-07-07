@@ -1,5 +1,7 @@
-import React from 'react';
-import { injectIntl, defineMessages, InjectedIntl } from 'react-intl';
+import { Component } from 'react';
+
+import type { IntlShape } from 'react-intl';
+import { injectIntl, defineMessages } from 'react-intl';
 
 const messages = defineMessages({
   today: { id: 'relative_time.today', defaultMessage: 'today' },
@@ -101,7 +103,7 @@ const getUnitDelay = (units: string) => {
 };
 
 export const timeAgoString = (
-  intl: InjectedIntl,
+  intl: IntlShape,
   date: Date,
   now: number,
   year: number,
@@ -153,7 +155,7 @@ export const timeAgoString = (
 };
 
 const timeRemainingString = (
-  intl: InjectedIntl,
+  intl: IntlShape,
   date: Date,
   now: number,
   timeGiven = true
@@ -187,19 +189,19 @@ const timeRemainingString = (
   return relativeTime;
 };
 
-type Props = {
-  intl: InjectedIntl;
+interface Props {
+  intl: IntlShape;
   timestamp: string;
   year: number;
   futureDate?: boolean;
   short?: boolean;
-};
-type States = {
+}
+interface States {
   now: number;
-};
-class RelativeTimestamp extends React.Component<Props, States> {
+}
+class RelativeTimestamp extends Component<Props, States> {
   state = {
-    now: this.props.intl.now(),
+    now: Date.now(),
   };
 
   static defaultProps = {
@@ -221,7 +223,7 @@ class RelativeTimestamp extends React.Component<Props, States> {
 
   UNSAFE_componentWillReceiveProps(nextProps: Props) {
     if (this.props.timestamp !== nextProps.timestamp) {
-      this.setState({ now: this.props.intl.now() });
+      this.setState({ now: Date.now() });
     }
   }
 
@@ -251,7 +253,7 @@ class RelativeTimestamp extends React.Component<Props, States> {
         : Math.max(updateInterval, unitRemainder);
 
     this._timer = window.setTimeout(() => {
-      this.setState({ now: this.props.intl.now() });
+      this.setState({ now: Date.now() });
     }, delay);
   }
 
