@@ -98,6 +98,7 @@ services:
       MAX_DISPLAY_NAME_CHARS: ${MAX_DISPLAY_NAME_CHARS}
       MAX_POLL_OPTIONS: ${MAX_POLL_OPTIONS}
       MAX_POLL_OPTION_CHARS: ${MAX_POLL_OPTION_CHARS}
+      SIDEKIQ_CONCURRENCY: ${SIDEKIQ_CONCURRENCY}
     build: .
     # env_file: .env.production
     command: bundle exec sidekiq
@@ -176,6 +177,7 @@ services:
       MAX_DISPLAY_NAME_CHARS: ${MAX_DISPLAY_NAME_CHARS}
       MAX_POLL_OPTIONS: ${MAX_POLL_OPTIONS}
       MAX_POLL_OPTION_CHARS: ${MAX_POLL_OPTION_CHARS}
+      SIDEKIQ_CONCURRENCY: ${SIDEKIQ_CONCURRENCY}
     build: .
     # env_file: .env.production
     command: node ./streaming
@@ -252,6 +254,7 @@ services:
       MAX_DISPLAY_NAME_CHARS: ${MAX_DISPLAY_NAME_CHARS}
       MAX_POLL_OPTIONS: ${MAX_POLL_OPTIONS}
       MAX_POLL_OPTION_CHARS: ${MAX_POLL_OPTION_CHARS}
+      SIDEKIQ_CONCURRENCY: ${SIDEKIQ_CONCURRENCY}
     build: .
     # env_file: .env.production
     command: bash -c "rm -f /mastodon/tmp/pids/server.pid; bundle exec rails s -p 3000"
