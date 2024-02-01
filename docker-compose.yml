@@ -180,7 +180,11 @@ services:
       MAX_POLL_OPTION_CHARS: ${MAX_POLL_OPTION_CHARS}
       SIDEKIQ_CONCURRENCY: ${SIDEKIQ_CONCURRENCY}
       RUBYOPT: ${RUBYOPT}
-    build: .
+    build:
+      context: .
+      dockerfile: streaming/Dockerfile
+      tags:
+        - basilisk-glitch-streaming
     # env_file: .env.production
     command: node ./streaming
     container_name: basilisk-glitch-streaming
@@ -291,4 +295,3 @@ volumes:
     external: true
   privoxyStorage:
     external: true
-
