@@ -241,6 +241,18 @@ COPY --from=precompiler /opt/mastodon/public/assets /opt/mastodon/public/assets
 # Copy bundler components to layer
 COPY --from=bundler /usr/local/bundle/ /usr/local/bundle/
 
+# Ensure Node
+COPY --from=node /usr/local/bin /usr/local/bin
+COPY --from=node /usr/local/lib /usr/local/lib
+
+RUN \
+  rm /usr/local/bin/yarn*; \
+  corepack enable; \
+  corepack prepare --activate; \
+  cd streaming; \
+  yarn workspaces focus --production @mastodon/streaming; \
+  yarn install --frozen-lockfile
+
 RUN \
 # Precompile bootsnap code for faster Rails startup
   bundle exec bootsnap precompile --gemfile app/ lib/;
