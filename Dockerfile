@@ -384,18 +384,6 @@ COPY --from=libvips /usr/local/libvips/lib /usr/local/lib
 COPY --from=ffmpeg /usr/local/ffmpeg/bin /usr/local/bin
 COPY --from=ffmpeg /usr/local/ffmpeg/lib /usr/local/lib
 
-# Ensure Node
-COPY --from=node /usr/local/bin /usr/local/bin
-COPY --from=node /usr/local/lib /usr/local/lib
-
-RUN \
-  rm /usr/local/bin/yarn*; \
-  corepack enable; \
-  corepack prepare --activate; \
-  cd streaming; \
-  yarn workspaces focus --production @mastodon/streaming; \
-  yarn install --frozen-lockfile
-
 RUN \
   ldconfig; \
 # Smoketest media processors
