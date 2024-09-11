@@ -3,10 +3,8 @@
 class Auth::SetupController < ApplicationController
   layout 'auth'
 
-  before_action :set_pack
   before_action :authenticate_user!
   before_action :require_unconfirmed_or_pending!
-  before_action :set_body_classes
   before_action :set_user
 
   skip_before_action :require_functional!
@@ -36,15 +34,7 @@ class Auth::SetupController < ApplicationController
     @user = current_user
   end
 
-  def set_body_classes
-    @body_classes = 'lighter'
-  end
-
   def user_params
     params.require(:user).permit(:email)
-  end
-
-  def set_pack
-    use_pack 'sign_up'
   end
 end

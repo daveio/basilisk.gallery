@@ -5,9 +5,7 @@ class Oauth::AuthorizedApplicationsController < Doorkeeper::AuthorizedApplicatio
 
   before_action :store_current_location
   before_action :authenticate_resource_owner!
-  before_action :set_pack
   before_action :require_not_suspended!, only: :destroy
-  before_action :set_body_classes
   before_action :set_cache_headers
 
   before_action :set_last_used_at_by_app, only: :index, unless: -> { request.format == :json }
@@ -18,21 +16,14 @@ class Oauth::AuthorizedApplicationsController < Doorkeeper::AuthorizedApplicatio
 
   def destroy
     Web::PushSubscription.unsubscribe_for(params[:id], current_resource_owner)
+    Doorkeeper::Application.find_by(id: params[:id])&.close_streaming_sessions(current_resource_owner)
     super
   end
 
   private
 
-  def set_body_classes
-    @body_classes = 'admin'
-  end
-
   def store_current_location
     store_location_for(:user, request.url)
-  end
-
-  def set_pack
-    use_pack 'settings'
   end
 
   def require_not_suspended!

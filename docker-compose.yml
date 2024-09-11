@@ -1,5 +1,7 @@
 ---
-# bump for c895b92
+# This file is designed for production server deployment, not local development work
+# For a containerized local dev environment, see: https://github.com/mastodon/mastodon/blob/main/README.md#docker
+
 networks:
   external_network: {}
   internal_network:
@@ -24,7 +26,7 @@ services:
           'CMD-SHELL',
           'curl --silent --fail localhost:9200/_cluster/health || exit 1',
         ]
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.1
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.1
     networks:
       - external_network
       - internal_network
@@ -109,7 +111,7 @@ services:
       # - es
       - privoxy
     healthcheck:
-      test: ['CMD-SHELL', "ps aux | grep 'idekiq 6' || false"]
+      test: ['CMD-SHELL', "ps aux | grep '[s]idekiq\ 6' || false"]
     image: basilisk-glitch
     networks:
       - external_network
@@ -183,18 +185,14 @@ services:
       RUBYOPT: ${RUBYOPT}
     build: .
     # env_file: .env.production
-    command: node ./streaming
+    command: node ./streaming/index.js
     container_name: basilisk-glitch-streaming
     depends_on:
       # - es
       - privoxy
       - sidekiq
     healthcheck:
-      test:
-        [
-          'CMD-SHELL',
-          'wget -q --spider --proxy=off localhost:4000/api/v1/streaming/health || exit 1',
-        ]
+      test: ['CMD-SHELL', "curl -s --noproxy localhost localhost:4000/api/v1/streaming/health | grep -q 'OK' || exit 1"]
     image: basilisk-glitch
     networks:
       - external_network
@@ -261,7 +259,7 @@ services:
       RUBYOPT: ${RUBYOPT}
     build: .
     # env_file: .env.production
-    command: bash -c "rm -f /mastodon/tmp/pids/server.pid; bundle exec rails s -p 3000"
+    command: bundle exec puma -C config/puma.rb
     container_name: basilisk-glitch-web
     depends_on:
       # - es
@@ -269,11 +267,7 @@ services:
       - sidekiq
       - streaming
     healthcheck:
-      test:
-        [
-          'CMD-SHELL',
-          'wget -q --spider --proxy=off localhost:3000/health || exit 1',
-        ]
+      test: ['CMD-SHELL',"curl -s --noproxy localhost localhost:3000/health | grep -q 'OK' || exit 1"]
     image: basilisk-glitch
     networks:
       - external_network

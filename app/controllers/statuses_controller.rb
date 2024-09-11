@@ -41,7 +41,6 @@ class StatusesController < ApplicationController
   end
 
   def embed
-    use_pack 'embed'
     return not_found if @status.hidden? || @status.reblog?
 
     expires_in 180, public: true
@@ -57,7 +56,9 @@ class StatusesController < ApplicationController
   end
 
   def set_link_headers
-    response.headers['Link'] = LinkHeader.new([[ActivityPub::TagManager.instance.uri_for(@status), [%w(rel alternate), %w(type application/activity+json)]]])
+    response.headers['Link'] = LinkHeader.new(
+      [[ActivityPub::TagManager.instance.uri_for(@status), [%w(rel alternate), %w(type application/activity+json)]]]
+    ).to_s
   end
 
   def set_status

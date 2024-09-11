@@ -66,18 +66,15 @@ RSpec.describe ActivityPub::RepliesController do
 
     context 'when status is public' do
       let(:parent_visibility) { :public }
-      let(:json) { body_as_json }
-      let(:page_json) { json[:first] }
+      let(:page_json) { response.parsed_body[:first] }
 
-      it 'returns http success' do
-        expect(response).to have_http_status(200)
-      end
+      it 'returns http success and correct media type' do
+        expect(response)
+          .to have_http_status(200)
+          .and have_cacheable_headers
 
-      it 'returns application/activity+json' do
         expect(response.media_type).to eq 'application/activity+json'
       end
-
-      it_behaves_like 'cacheable response'
 
       context 'without only_other_accounts' do
         it "returns items with thread author's replies" do
@@ -90,7 +87,7 @@ RSpec.describe ActivityPub::RepliesController do
         context 'when there are few self-replies' do
           it 'points next to replies from other people' do
             expect(page_json).to be_a Hash
-            expect(Addressable::URI.parse(page_json[:next]).query.split('&')).to include('only_other_accounts=true', 'page=true')
+            expect(parsed_uri_query_values(page_json[:next])).to include('only_other_accounts=true', 'page=true')
           end
         end
 
@@ -101,7 +98,7 @@ RSpec.describe ActivityPub::RepliesController do
 
           it 'points next to other self-replies' do
             expect(page_json).to be_a Hash
-            expect(Addressable::URI.parse(page_json[:next]).query.split('&')).to include('only_other_accounts=false', 'page=true')
+            expect(parsed_uri_query_values(page_json[:next])).to include('only_other_accounts=false', 'page=true')
           end
         end
       end
@@ -140,7 +137,7 @@ RSpec.describe ActivityPub::RepliesController do
 
           it 'points next to other replies' do
             expect(page_json).to be_a Hash
-            expect(Addressable::URI.parse(page_json[:next]).query.split('&')).to include('only_other_accounts=true', 'page=true')
+            expect(parsed_uri_query_values(page_json[:next])).to include('only_other_accounts=true', 'page=true')
           end
         end
       end
@@ -195,6 +192,13 @@ RSpec.describe ActivityPub::RepliesController do
   end
 
   private
+
+  def parsed_uri_query_values(uri)
+    Addressable::URI
+      .parse(uri)
+      .query
+      .split('&')
+  end
 
   def ap_public_collection
     ActivityPub::TagManager::COLLECTIONS[:public]

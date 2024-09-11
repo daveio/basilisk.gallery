@@ -15,10 +15,10 @@
   .fields-row
     .fields-row__column.fields-row__column-6
       .fields-group
-        = f.input :display_name, wrapper: :with_block_label, input_html: { maxlength: Account::MAX_DISPLAY_NAME_LENGTH, data: { default: @account.username } }
+        = f.input :display_name, wrapper: :with_block_label, input_html: { maxlength: Account::DISPLAY_NAME_LENGTH_LIMIT, data: { default: @account.username } }
 
       .fields-group
-        = f.input :note, wrapper: :with_block_label, input_html: { maxlength: Account::MAX_NOTE_LENGTH }
+        = f.input :note, wrapper: :with_block_label, input_html: { maxlength: Account::NOTE_LENGTH_LIMIT }
 
     .fields-row__column.fields-group.fields-row__column-6
       .input.with_block_label
@@ -43,7 +43,7 @@
         = image_tag @account.avatar.url, class: 'fields-group__thumbnail', id: 'account_avatar-preview'
         - if @account.avatar.present?
           = link_to settings_profile_picture_path('avatar'), data: { method: :delete }, class: 'link-button link-button--destructive' do
-            = fa_icon 'trash fw'
+            = material_symbol 'delete'
             = t('generic.delete')
 
   .fields-row
@@ -59,7 +59,7 @@
         = image_tag @account.header.url, class: 'fields-group__thumbnail', id: 'account_header-preview'
         - if @account.header.present?
           = link_to settings_profile_picture_path('header'), data: { method: :delete }, class: 'link-button link-button--destructive' do
-            = fa_icon 'trash fw'
+            = material_symbol 'delete'
             = t('generic.delete')
 
   %h4= t('edit_profile.other')

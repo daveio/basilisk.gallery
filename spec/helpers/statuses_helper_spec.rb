@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe StatusesHelper do
+RSpec.describe StatusesHelper do
   describe 'status_text_summary' do
     context 'with blank text' do
       let(:status) { Status.new(spoiler_text: '') }
@@ -23,29 +23,16 @@ describe StatusesHelper do
     end
   end
 
-  def status_text_summary(status)
-    return if status.spoiler_text.blank?
+  describe '#media_summary' do
+    it 'describes the media on a status' do
+      status = Fabricate :status
+      Fabricate :media_attachment, status: status, type: :video
+      Fabricate :media_attachment, status: status, type: :audio
+      Fabricate :media_attachment, status: status, type: :image
 
-    I18n.t('statuses.content_warning', warning: status.spoiler_text)
-  end
+      result = helper.media_summary(status)
 
-  describe 'link_to_newer' do
-    it 'returns a link to newer content' do
-      url = 'https://example.com'
-      result = helper.link_to_newer(url)
-
-      expect(result).to match('load-more')
-      expect(result).to match(I18n.t('statuses.show_newer'))
-    end
-  end
-
-  describe 'link_to_older' do
-    it 'returns a link to older content' do
-      url = 'https://example.com'
-      result = helper.link_to_older(url)
-
-      expect(result).to match('load-more')
-      expect(result).to match(I18n.t('statuses.show_older'))
+      expect(result).to eq('Attached: 1 image · 1 video · 1 audio')
     end
   end
 
@@ -56,7 +43,7 @@ describe StatusesHelper do
       it 'returns the correct fa icon' do
         result = helper.fa_visibility_icon(status)
 
-        expect(result).to match('fa-globe')
+        expect(result).to match('material-globe')
       end
     end
 
@@ -66,7 +53,7 @@ describe StatusesHelper do
       it 'returns the correct fa icon' do
         result = helper.fa_visibility_icon(status)
 
-        expect(result).to match('fa-unlock')
+        expect(result).to match('material-lock_open')
       end
     end
 
@@ -76,7 +63,7 @@ describe StatusesHelper do
       it 'returns the correct fa icon' do
         result = helper.fa_visibility_icon(status)
 
-        expect(result).to match('fa-lock')
+        expect(result).to match('material-lock')
       end
     end
 
@@ -86,7 +73,7 @@ describe StatusesHelper do
       it 'returns the correct fa icon' do
         result = helper.fa_visibility_icon(status)
 
-        expect(result).to match('fa-at')
+        expect(result).to match('material-alternate_email')
       end
     end
   end
