@@ -115,7 +115,7 @@ services:
       - privoxy
     healthcheck:
       test: ['CMD-SHELL', "ps aux | grep '[s]idekiq\ 6' || false"]
-    image: basilisk-glitch
+    image: basilisk-glitch-sidekiq
     networks:
       - external_network
       - internal_network
@@ -205,7 +205,7 @@ services:
           'CMD-SHELL',
           "curl -s --noproxy localhost localhost:4000/api/v1/streaming/health | grep -q 'OK' || exit 1",
         ]
-    image: basilisk-glitch
+    image: basilisk-glitch-streaming
     networks:
       - external_network
       - internal_network
@@ -287,7 +287,7 @@ services:
           'CMD-SHELL',
           "curl -s --noproxy localhost localhost:3000/health | grep -q 'OK' || exit 1",
         ]
-    image: basilisk-glitch
+    image: basilisk-glitch-web
     networks:
       - external_network
       - internal_network
